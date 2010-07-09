@@ -417,21 +417,19 @@ Just like `TranslationAdmin` these classes implement a special method
 patching.
 
 For our example we assume that there is new model called Image. It's
-definition is left out for simplicity. Our News model inlines the new model:
+definition is left out for simplicity. Our News model inlines the new model::
 
-{{{
-from django.contrib import admin
-from modeltranslation.admin import TranslationTabularInline
+    from django.contrib import admin
+    from modeltranslation.admin import TranslationTabularInline
 
-class ImageInline(TranslationTabularInline):
-    model = Image
+    class ImageInline(TranslationTabularInline):
+        model = Image
 
-class NewsAdmin(admin.ModelAdmin):
-    list_display = ('title',)
-    inlines = [ImageInline,]
+    class NewsAdmin(admin.ModelAdmin):
+        list_display = ('title',)
+        inlines = [ImageInline,]
 
-admin.site.register(News, NewsAdmin)
-}}}
+    admin.site.register(News, NewsAdmin)
 
 *Note:* In this example only the Image model is registered in translation.py.
 It's not a requirement that `NewsAdmin` derives from `TranslationAdmin` in
@@ -440,25 +438,23 @@ order to inline a model which is registered for translation.
 In this more complex example we assume that the News and Image models are
 registered in translation.py. The News model has an own custom admin class and
 the Image model an own generic stacked inline class. It uses the technique
-described in [InstallationAndUsage#TranslationAdmin_in_combination_with_other_admin_classes TranslationAdmin in combination with other admin classes].:
+described in [InstallationAndUsage#TranslationAdmin_in_combination_with_other_admin_classes TranslationAdmin in combination with other admin classes].::
 
-{{{
-from django.contrib import admin
-from modeltranslation.admin import TranslationAdmin, TranslationGenericStackedInline
+    from django.contrib import admin
+    from modeltranslation.admin import TranslationAdmin, TranslationGenericStackedInline
 
-class TranslatedImageInline(ImageInline, TranslationGenericStackedInline):
-    model = Image
+    class TranslatedImageInline(ImageInline, TranslationGenericStackedInline):
+        model = Image
 
-class TranslatedNewsAdmin(NewsAdmin, TranslationAdmin):
-    def formfield_for_dbfield(self, db_field, **kwargs):
-        field = super(TranslatedNewsAdmin, self).formfield_for_dbfield(db_field, **kwargs)
-        self.patch_translation_field(db_field, field, **kwargs)
-        return field
+    class TranslatedNewsAdmin(NewsAdmin, TranslationAdmin):
+        def formfield_for_dbfield(self, db_field, **kwargs):
+            field = super(TranslatedNewsAdmin, self).formfield_for_dbfield(db_field, **kwargs)
+            self.patch_translation_field(db_field, field, **kwargs)
+            return field
 
-    inlines = [TranslatedImageInline,]
+        inlines = [TranslatedImageInline,]
 
-admin.site.register(News, NewsAdmin)
-}}}
+    admin.site.register(News, NewsAdmin)
 
 
 Using tabbed translation fields
