@@ -8,19 +8,13 @@ from django.utils.functional import lazy
 
 from modeltranslation.settings import *
 
-
 def get_language():
     """
     Return an active language code that is guaranteed to be in
     settings.LANGUAGES (Django does not seem to guarantee this for us).
     """
     lang = _get_language()
-    if lang not in AVAILABLE_LANGUAGES and '-' in lang:
-        lang = lang.split('-')[0]
-    if lang in AVAILABLE_LANGUAGES:
-        return lang
-    return AVAILABLE_LANGUAGES[0]
-
+    return lang
 
 def get_translation_fields(field):
     """Returns a list of localized fieldnames for a given field."""
