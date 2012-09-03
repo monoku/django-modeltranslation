@@ -86,7 +86,8 @@ class TranslationAdmin(admin.ModelAdmin, TranslationAdminBase):
         else:
             # If there aren't any existing fieldsets, we'll automatically
             # create one to group each translated field's localized fields:
-
+            for f in self.opts.fields:
+                print f
             non_translated_fields = [
                 f.name for f in self.opts.fields if (
                     # The original translation field:
@@ -94,7 +95,7 @@ class TranslationAdmin(admin.ModelAdmin, TranslationAdminBase):
                     # The auto-generated fields for translations:
                     and f.name not in trans_opts.localized_fieldnames_rev
                     # Avoid including the primary key field:
-                    and f is not self.opts.auto_field
+                    and f is not self.opts.auto_field and f.name != 'slug'
                 )
             ]
 
